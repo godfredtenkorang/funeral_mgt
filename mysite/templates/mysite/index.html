@@ -1,0 +1,116 @@
+{% extends 'mysite/base.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <h2 class="mb-4">Dashboard</h2>
+
+    <div class="row">
+        <!-- Summary Cards -->
+        <div class="col-md-3 mb-4">
+            <div class="card text-white bg-primary h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Upcoming Funerals</h5>
+                    <h2 class="card-text">{{ upcoming_funerals.count }}</h2>
+                    <a href="" class="text-white">View all</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-4">
+            <div class="card text-white bg-success h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Recent Clients</h5>
+                    <h2 class="card-text">{{ recent_clients.count }}</h2>
+                    <a href="" class="text-white">View all</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-4">
+            <div class="card text-white bg-warning h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Pending Invoices</h5>
+                    <h2 class="card-text">{{ pending_invoices.count }}</h2>
+                    <a href="" class="text-white">View all</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-4">
+            <div class="card text-white bg-danger h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Low Inventory</h5>
+                    <h2 class="card-text">{{ low_inventory.count }}</h2>
+                    <a href="" class="text-white">View all</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upcoming Funerals -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5>Upcoming Funerals</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Date & Time</th>
+                            <th>Deceased</th>
+                            <th>Client</th>
+                            <th>Location</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                        <tr>
+                            <td>{{ funeral.date_time|date:"M d, Y H:i" }}</td>
+                            <td>{{ funeral.deceased.first_name }} {{ funeral.deceased.last_name }}</td>
+                            <td>{{ funeral.deceased.next_of_kin.first_name }} {{ funeral.deceased.next_of_kin.last_name
+                                }}</td>
+                            <td>{{ funeral.location }}</td>
+                            <td><span
+                                    class="badge bg-{% if funeral.status == 'PLANNED' %}info{% elif funeral.status == 'SCHEDULED' %}primary{% else %}success{% endif %}">{{
+                                    funeral.get_status_display }}</span></td>
+                            <td>
+                                <a href=""
+                                    class="btn btn-sm btn-outline-primary">View</a>
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td colspan="6" class="text-center">No upcoming funerals</td>
+                        </tr>
+                       
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="card">
+        <div class="card-header">
+            <h5>Recent Activity</h5>
+        </div>
+        <div class="card-body">
+            <ul class="list-group">
+                
+                <li class="list-group-item">
+                    <small class="text-muted">{{ activity.timestamp|timesince }} ago</small><br>
+                    {{ activity.message }}
+                </li>
+               
+                <li class="list-group-item">No recent activity</li>
+                
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
