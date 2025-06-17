@@ -1,0 +1,60 @@
+{% extends 'mysite/base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="card mb-4">
+        {% if funeral.image %}
+        <img src="{{ funeral.image.url }}" class="card-img-top" alt="{{ funeral.title }}"
+            style="max-height: 300px; object-fit: cover;">
+        {% endif %}
+        <div class="card-body">
+            <h2 class="card-title">{{ funeral.title }}</h2>
+            <p class="card-text">
+                <strong>Date:</strong> {{ funeral.date|date:"F j, Y, P" }}<br>
+                <strong>Location:</strong> {{ funeral.location }}
+            </p>
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3>Donations</h3>
+        <div>
+            <a href="{% url 'donation_add' funeral.pk %}" class="btn btn-success">Add Donation</a>
+            <a href="{% url 'donation_report' funeral.pk %}" class="btn btn-info">View Report</a>
+            <a href="{% url 'export_donations' funeral.pk %}" class="btn btn-secondary">Export to Excel</a>
+        </div>
+    </div>
+
+    {% if donations %}
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Donor Name</th>
+                    <th>Donation For</th>
+                    <th>Amount</th>
+                    <th>Payment Mode</th>
+                    <th>Date</th>
+                    <th>Export to PDF</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for donation in donations %}
+                <tr>
+                    <td>{{ donation.donor_name }}</td>
+                    <td>{{ donation.donation_for }}</td>
+                    <td>{{ donation.amount }} {{ donation.currency }}</td>
+                    <td>{{ donation.get_payment_mode_display }}</td>
+                    <td>{{ donation.donation_date|date:"M j, Y" }}</td>
+                    <td><a href="{% url 'export_donations_pdf' donation.pk %}" class="btn btn-danger">Export to PDF</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="alert alert-info">No donations recorded yet.</div>
+    {% endif %}
+</div>
+{% endblock %}
