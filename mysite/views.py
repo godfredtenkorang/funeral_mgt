@@ -13,14 +13,10 @@ from django.db.models import Sum
 from django.http import HttpResponse, HttpRequest
 from django.template.loader import render_to_string
 import xlwt
-from reportlab.pdfgen import canvas
-from reportlab.lib.pagesizes import A6
-from reportlab.lib.units import mm
-from reportlab.lib import colors
-from reportlab.platypus import Table, TableStyle
-from io import BytesIO
+
 from django.template.loader import get_template
 from xhtml2pdf import pisa
+from .utils import send_donation_sms, send_donation_thanksgiving_sms
 
 
 
@@ -57,6 +53,25 @@ class FuneralDetailView(LoginRequiredMixin, DetailView):
         context['donations'] = self.object.donations.all()
         return context
     
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        donation_id = request.POST.get('donation_id')
+        
+        try:
+            donation = self.object.donations.get(id=donation_id)
+            send_donation_thanksgiving_sms(
+                phone_number=donation.phone_number,
+                donor_name=donation.donor_name
+            )
+            messages.success(request, f"SMS sent successfully to {donation.donor_name}")
+        except Donation.DoesNotExist:
+            messages.error(request, "Donation not found")
+        except Exception as e:
+            messages.error(request, f"Failed to send SMS: {str(e)}")
+        
+        return redirect('funeral_detail', pk=self.object.pk)
+    
+    
     
 class DonationCreateView(LoginRequiredMixin, CreateView):
     model = Donation
@@ -67,8 +82,60 @@ class DonationCreateView(LoginRequiredMixin, CreateView):
         return reverse_lazy('funeral_detail', kwargs={'pk': self.object.funeral.pk})
     
     def form_valid(self, form):
+        response = super().form_valid(form)
+         # Send SMS notification after successful form submission
+        
+        donation = self.object
+        send_donation_sms(
+            phone_number=donation.phone_number,
+            donor_name=donation.donor_name,
+            donation_for=donation.funeral.title,
+            
+        )
+        
         messages.success(self.request, 'Donation recorded successfully!')
-        return super().form_valid(form)
+        return response
+    
+    
+class DonationReceiptView(DetailView):
+    model = Donation
+    template_name = 'mysite/print_receipt.html'
+    context_object_name = 'donation'
+    
+    
+def download_receipt_pdf(request, donation_id):
+    donation = Donation.objects.get(id=donation_id)
+    
+    template = get_template('mysite/print_receipt.html')
+    html = template.render({'donation': donation})
+    result = HttpResponse(content_type='application/pdf')
+    # Create a link callback function
+    def link_callback(uri, rel):
+        """
+        Convert HTML URIs to absolute system paths so xhtml2pdf can access those resources
+        """
+        # Handle static files
+        if uri.startswith(settings.STATIC_URL):
+            path = os.path.join(settings.STATIC_ROOT, uri.replace(settings.STATIC_URL, ''))
+        # Handle media files
+        elif uri.startswith(settings.MEDIA_URL):
+            path = os.path.join(settings.MEDIA_ROOT, uri.replace(settings.MEDIA_URL, ''))
+        # Handle absolute URIs
+        else:
+            return uri
+
+        # Make sure the file exists
+        if not os.path.isfile(path):
+            raise Exception(f"Media file not found: {path}")
+        
+        return path
+    
+    pisa_status = pisa.CreatePDF(html, dest=result, link_callback=link_callback, encoding='UTF-8')
+    if pisa_status.err:
+        return HttpResponse(f"We had some errors <pre>{html}</pre>")
+    return result
+    
+    
     
 def donation_report(request, funeral_id):
     funeral = get_object_or_404(Funeral, pk=funeral_id)

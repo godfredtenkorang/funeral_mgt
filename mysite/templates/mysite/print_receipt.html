@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Funeral Donation Receipt</title>
+    <style>
+        @page {
+            size: A4 landscape;
+            margin: 0;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .sheet {
+            width: 297mm;
+            height: 210mm;
+            display: flex;
+            flex-wrap: wrap;
+            page-break-after: always;
+        }
+        
+        .receipt {
+            width: 148mm;
+            height: 210mm;
+            padding: 15px;
+            box-sizing: border-box;
+            border-right: 1px dashed #ccc;
+            position: relative;
+        }
+        
+        .receipt:last-child {
+            border-right: none;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .header img {
+            height: 30px;
+            width: auto;
+        }
+        
+        h1 {
+            font-size: 16px;
+            text-align: center;
+            margin: 10px 0;
+            text-transform: uppercase;
+        }
+        
+        .date {
+            text-align: center;
+            font-size: 12px;
+            
+        }
+        
+        .donor-info {
+            font-size: 12px;
+            
+            line-height: 1.4;
+        }
+        
+        .donor-info strong {
+            display: inline-block;
+            width: 100px;
+        }
+        
+        
+        
+        .message {
+            font-size: 12px;
+            text-align: center;
+            margin-top: 15px;
+            line-height: 1.0;
+        }
+        
+        .footer {
+            position: absolute;
+            bottom: 15px;
+            left: 0;
+            right: 0;
+            font-size: 10px;
+            text-align: center;
+        }
+        
+        @media print {
+            body {
+                margin: 0;
+                padding: 0;
+            }
+            .sheet {
+                page-break-after: always;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="sheet">
+        <!-- First Receipt -->
+        <div class="receipt">
+            <!-- <div class="header">
+                {% if donation.ecobank_logo %}
+                <img src="{{ donation.ecobank_logo.url }}" alt="Ecobank Logo">
+                {% endif %}
+                {% if donation.fnet_logo %}
+                <img src="{{ donation.fnet_logo.url }}" alt="Fnet Logo">
+                {% endif %}
+            </div> -->
+    
+            <h1>{{ donation.funeral.title }}</h1>
+    
+            <div class="date">{{ donation.donation_date }}</div>
+    
+            <div class="donor-info">
+                <strong>Donor's Name:</strong> {{ donation.donor_name }}<br>
+                <strong>Donation To:</strong> {{ donation.donation_for }}<br>
+                <strong>Currency:</strong> {{ donation.currency }}<br>
+                <strong>Payment Mode:</strong> {{ donation.payment_mode }}<br>
+                <strong>Contact:</strong> 0241413007<br>
+                <strong>Amount:</strong> {{ donation.amount }}
+            </div>
+    
+            <!-- <div class="amount">{{ donation.amount }}</div> -->
+    
+            <div class="message">
+                The Family of {{ donation.donor_name }} wish to express our profound appreciation to you for
+                celebrating the life of a Mother, Grandmother and Friend with your presence, donation and condolences.
+                <br><br>
+                We acknowledge you for being with us in this Celebration of Life.
+            </div>
+    
+            <div class="footer">
+                Thank you for your generous support
+            </div>
+        </div>
+    
+        <!-- Second Receipt (Duplicate) -->
+        <div class="receipt">
+            <!-- <div class="header">
+                {% if donation.ecobank_logo %}
+                <img src="{{ donation.ecobank_logo.url }}" alt="Ecobank Logo">
+                {% endif %}
+                {% if donation.fnet_logo %}
+                <img src="{{ donation.fnet_logo.url }}" alt="Fnet Logo">
+                {% endif %}
+            </div> -->
+            
+            <h1>{{ donation.funeral.title }}</h1>
+    
+            <div class="date">{{ donation.donation_date }}</div>
+    
+            <div class="donor-info">
+                <strong>Donor's Name:</strong> {{ donation.donor_name }}<br>
+                <strong>Donation To:</strong> {{ donation.donation_for }}<br>
+                <strong>Currency:</strong> {{ donation.currency }}<br>
+                <strong>Payment Mode:</strong> {{ donation.payment_mode }}<br>
+                <strong>Contact:</strong> 0241413007<br>
+                <strong>Amount:</strong> {{ donation.amount }}
+            </div>
+    
+            <!-- <div class="amount">{{ donation.amount }}</div> -->
+    
+            <div class="message">
+                The Family of {{ donation.donor_name }} wish to express our profound appreciation to you for
+                celebrating the life of a Mother, Grandmother and Friend with your presence, donation and condolences.
+                <br><br>
+                We acknowledge you for being with us in this Celebration of Life.
+            </div>
+    
+            <div class="footer">
+                Thank you for your generous support
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

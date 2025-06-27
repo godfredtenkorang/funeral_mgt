@@ -36,6 +36,7 @@
                     <th>Payment Mode</th>
                     <th>Date</th>
                     <th>Export to PDF</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -46,8 +47,19 @@
                     <td>{{ donation.amount }} {{ donation.currency }}</td>
                     <td>{{ donation.get_payment_mode_display }}</td>
                     <td>{{ donation.donation_date|date:"M j, Y" }}</td>
-                    <td><a href="{% url 'export_donations_pdf' donation.pk %}" class="btn btn-danger">Export to PDF</a>
+                    <td><a href="{% url 'download_receipt_pdf' donation.id %}" class="btn btn-danger">Export to PDF</a>
                     </td>
+                    <td>
+                        <form method="POST" action="{% url 'funeral_detail' funeral.pk %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="donation_id" value="{{ donation.id }}">
+                            <button type="submit" class="btn btn-primary btn-sm">
+                                Send SMS
+                            </button>
+                        </form>
+                </td>
+                    <!-- <td><a href="{% url 'view_receipt' donation.id %}" class="btn btn-danger">Export to PDF</a>
+                    </td> -->
                 </tr>
                 {% endfor %}
             </tbody>

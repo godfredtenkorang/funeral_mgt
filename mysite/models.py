@@ -32,6 +32,7 @@ class Donation(models.Model):
 
     funeral = models.ForeignKey(Funeral, on_delete=models.CASCADE, related_name='donations')
     donor_name = models.CharField(max_length=200)
+    phone_number = models.CharField(max_length=10, null=True, blank=True)
     donation_for = models.CharField(max_length=200)
     currency = models.CharField(max_length=3, choices=CURRENCIES, default='GHS')
     amount = models.DecimalField(max_digits=10, decimal_places=2)
