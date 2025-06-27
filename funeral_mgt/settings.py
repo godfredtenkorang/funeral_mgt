@@ -21,10 +21,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = config('SECRET_KEY')
+# SECRET_KEY = config('SECRET_KEY')
+SECRET_KEY = 'django-insecure-2$ubn2cyumm46h4@r+u#b80lbtaye%l-ibkmu=vfh7i6_*n7x9'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config('DEBUG', cast=bool)
+DEBUG = True
 
 ALLOWED_HOSTS = []
 
@@ -150,4 +151,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # XHTML2PDF_USE_CSSPARSER = True
 # XHTML2PDF_DEFAULT_FONT = 'helvetica'
 
-MNOTIFY_API_KEY= config("MNOTIFY_API_KEY")
+MNOTIFY_API_KEY= 'SwaOIqV5WEUxk9LP6wQvSUfmd'
