@@ -6,9 +6,11 @@ certifi==2025.4.26
 cffi==1.17.1
 chardet==5.2.0
 charset-normalizer==3.4.2
+crispy-bootstrap5==2025.6
 cryptography==45.0.4
 cssselect2==0.8.0
 Django==5.2.1
+django-crispy-forms==2.4
 et_xmlfile==2.0.0
 fonttools==4.58.4
 gunicorn==23.0.0
